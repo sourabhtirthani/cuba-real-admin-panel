@@ -11,6 +11,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import IntegrationNotistack from "./CopySuccsessful";
 import { CiShare1 } from "react-icons/ci";
 import { FaWallet } from "react-icons/fa6";
+import { fetchAllActivities } from "../../../api/integrateConfig";
 
 
 
@@ -20,6 +21,7 @@ import { FaWallet } from "react-icons/fa6";
 const Dashboard = () => {
 
   const [visibleItems, setVisibleItems] = useState(15); // Number of items to display initially
+  const [platformData , setPlatformData] = useState([])
 
   const [isSeeMoreVisible, setIsSeeMoreVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
@@ -63,136 +65,136 @@ const Dashboard = () => {
     window.getSelection().removeAllRanges();
   };
 
-  const platformdata = [
-    {
-      usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
-      newuser: 'New User Join',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'NewUser'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
-      newuser: 'New User Join',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'NewUser'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
-      newuser: 'New User Join',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'NewUser'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
-      newuser: 'New User Join',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'NewUser'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
-      newuser: 'New User Join',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'NewUser'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
-      newuser: 'New User Join',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'NewUser'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
-    {
-      usericon: (<FaWallet style={{ color: 'green' }} />),
-      newuser: '+5 BUSD in x4',
-      UserId: '869255',
-      jioningtiming: '7 minutes',
-      className: 'transaction'
-    },
+  // const platformdata1 = [
+  //   {
+  //     usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
+  //     newuser: 'New User Join',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'NewUser'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
+  //     newuser: 'New User Join',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'NewUser'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
+  //     newuser: 'New User Join',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'NewUser'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
+  //     newuser: 'New User Join',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'NewUser'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
+  //     newuser: 'New User Join',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'NewUser'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<PersonAddAltRoundedIcon sx={{ fontSize: "15px" }} />),
+  //     newuser: 'New User Join',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'NewUser'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
+  //   {
+  //     usericon: (<FaWallet style={{ color: 'green' }} />),
+  //     newuser: '+5 BUSD in x4',
+  //     UserId: '869255',
+  //     jioningtiming: '7 minutes',
+  //     className: 'transaction'
+  //   },
 
 
-  ]
+  // ]
 
   const showMoreItems = () => {
     setVisibleItems(visibleItems + 15); // Increase the number of visible items
@@ -205,6 +207,39 @@ const Dashboard = () => {
     { name: 'x3/x4', link: ' 0x5ac...B97' },
     { name: 'x3/x4', link: ' 0x5ac...B97' }
   ]
+
+
+  useEffect(()=>{
+    const fetchListOfActivities = async()=>{
+      try{
+        const activityList = await fetchAllActivities();
+        setPlatformData(activityList.allActivities);
+        // console.log(activityList)
+        // console.log(`activity list is : ${platformData}`)
+
+      }catch(error){
+        console.log(`error in fetching list of activities in useEffect : ${error.message}`)
+      }
+    }
+    fetchListOfActivities();
+
+  }, [])
+
+  const formatTimeDifference = (createdAt)=>{
+    const currentDate = new Date();
+    const createdAtDate = new Date(createdAt);
+
+    const timeDifferenceInMilliseconds = currentDate - createdAtDate;
+    const timeDifferenceInSeconds = Math.floor(timeDifferenceInMilliseconds / 1000);
+    const minutes = Math.floor(timeDifferenceInSeconds / 60);
+    if(minutes == 0){
+      return 'Just now'
+    }else if(minutes == '1'){
+      return '1 minute ago'
+    }else{
+      return `${minutes} minutes ago`
+    }
+  }
 
   return (
     <div className="dashboard-container">
@@ -441,18 +476,18 @@ const Dashboard = () => {
               <div className="platform-left-container">
                 <div className="platform-left-box" >
                   <div></div>
-                  {platformdata.slice(0, visibleItems).map((data, index) => (
+                  {platformData.slice(0, visibleItems).map((data, index) => (
                     <div className="table-in-row-1" key={index}>
                       <div className="table-left-div">
                         <div className="table-user-icon" style={{ fontSize: '15px' }}>
-                          {data.usericon}
+                          {/* {data.usericon} */}
                         </div>
-                        <div className={data.className}>
+                        <div className='NewUser'>
 
                           <div className="new-user-heading">
-                            <span>{data.newuser}</span>
+                            <span>{data.activiy}</span>
                           </div>
-                          <div className="ID-box">ID {data.UserId}</div>
+                          <div className="ID-box">ID {data.userId}</div>
                         </div>
                       </div>
 
@@ -460,7 +495,7 @@ const Dashboard = () => {
                         <span>
                           <CiShare1 size={'18px'} style={{ fontWeight: '800' }} />
                         </span>
-                        <span>{data.jioningtiming}</span>
+                        <span>{formatTimeDifference(data.createdAt)}</span>
                       </div>
                     </div>
 
@@ -492,7 +527,7 @@ const Dashboard = () => {
 
 
 
-                  {platformdata.length > visibleItems && (
+                  {platformData.length > visibleItems && (
                     <div className="see-more-div">
                       <div className="see-more-button" onClick={showMoreItems}>
 

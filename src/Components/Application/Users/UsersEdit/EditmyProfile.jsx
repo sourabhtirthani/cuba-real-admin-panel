@@ -1,18 +1,68 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Btn, H4 } from "../../../../AbstractElements";
 import { useForm } from "react-hook-form";
 import './EditProfile.css'
 import { Row, Col, CardHeader, CardBody, CardFooter, Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import { EditProfile, Company, Username, UsersCountryMenu, AboutMe, UpdateProfile, FirstName, LastName, Address, EmailAddress, PostalCode, Country, City } from '../../../../Constant';
+import { getUserDetails, updateProfile } from "../../../../api/integrateConfig";
+// import  {useAccount } from 'wagmi';
+import Swal from 'sweetalert2';
 
 const EditMyProfile = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onEditSubmit = (data) => {
-        alert(data)
+    const [formData,setFormdata] = useState({
+        name:"",
+        profilePicture:"",
+        email:"",
+        mobileNumber:""
+    })
+
+    // const { address} = useAccount();   
+    const {address} = "abcd"
+
+
+    const onEditSubmit = async (e) => {
+        try{
+        e.preventDefault();
+        // alert(data)
+        const updateIt = await updateProfile(formData);
+        Swal.fire({
+            icon:"success",
+            title:"SUCCESSFULL",
+            text:"Successfully edited profile",
+          })
+
+        }catch(error){
+
+            console.log(`error in try catch block in the uodate profile section in handlesubmit : ${error.message}`)
+        }
     }
+
+    useEffect(()=>{               // new addition
+        const fetchUserDetails = async()=>{
+                // const accounts = await window.ethereum.request({ method : 'eth_requestAccounts'});
+                // const userAddress = accounts[0];
+                console.log(`user address is : ${address}`)
+                const data = {address : address}
+                try{
+                const response = await getUserDetails(data);
+                
+                        localStorage.setItem("userID" , response.userData.userId);
+                        // console.log(`storage from the loacl storage is : ${localStorage.getItem("userID")}`)
+                
+                setFormdata({...response.userData})
+                console.log(response)
+                }catch(error){
+                    // alert(`You have been logged out! Please log back in again`)
+                    console.log(`error in getuserdetails when in Fnd : ${error.message}`)
+                }
+        }
+        
+        fetchUserDetails();
+    }, [address]) 
     return (
         <Fragment>
-            <Form className="card" onSubmit={handleSubmit(onEditSubmit)}>
+            <Form className="card" onSubmit={onEditSubmit}>
                 <CardHeader>
                     <H4 attrH4={{ className: "card-title mb-0" }}>{EditProfile}</H4>
                     <div className="card-options">
@@ -28,7 +78,7 @@ const EditMyProfile = () => {
                     <Row>
                         <Col sm="6" md="6">
                             <FormGroup> <Label className="form-label" style={{ color: '#BEBFC2' }}>{Username}</Label>
-                                <Input style={{ color: '#BEBFC2' }} className="form-control" type="text" placeholder="Username" {...register("Username", { required: true })} /><span style={{ color: "red" }}>{errors.Username && 'Username is required'} </span>
+                                <Input style={{ color: '#BEBFC2' }} className="form-control" type="text" placeholder="Username" value={formData.name} onChange={(e)=>setFormdata((prev)=>({...prev,name:e.target.value}))} {...register("Username", { required: true })} /><span style={{ color: "red" }}>{errors.Username && 'Username is required'} </span>
                             </FormGroup>
                         </Col>
 
@@ -42,7 +92,9 @@ const EditMyProfile = () => {
                                     className="form-control"
                                     type="text"
                                     placeholder="User ID"
-                                    {...register("EmailAddress", { required: true })}
+                                    {...register("userId", { required: true })}
+                                    value={formData.userId}
+                                    readOnly
                                 />
                                 <span style={{ color: "red" }}>{errors.EmailAddress && ' User ID is required'} </span>
                             </FormGroup>
@@ -53,7 +105,7 @@ const EditMyProfile = () => {
                                 {/* {Company} */}
                                 Photo
                             </Label>
-                                <Input className="form-control" type="file" placeholder="Company" {...register("company", { required: true })} /><span style={{ color: "red" }}>{errors.company && 'Photo is required'} </span>
+                                <Input className="form-control" type="file" placeholder="profilePicture" onChange={(e)=>setFormdata((prev)=>({...prev,profilePicture:e.target.files[0]}))} /><span style={{ color: "red" }}>{errors.company && 'Photo is required'} </span>
                             </FormGroup>
                         </Col>
 
@@ -76,7 +128,7 @@ const EditMyProfile = () => {
                                 {/* {City} */}
                                 Email ID
                             </Label>
-                                <Input className="form-control" type="Email ID" placeholder="Email ID" {...register("City", { required: true })} /><span style={{ color: "red" }}>{errors.City && 'Email ID is required'} </span>
+                                <Input className="form-control" type="Email ID" placeholder="Email ID" value={formData.email} onChange={(e)=>setFormdata((prev)=>({...prev,email:e.target.value}))} /><span style={{ color: "red" }}>{errors.City && 'Email ID is required'} </span>
                             </FormGroup>
                         </Col>
                         <Col sm="6" md="6">
@@ -86,7 +138,7 @@ const EditMyProfile = () => {
                                 {/* {Address} */}
                                 Mobile No.
                             </Label>
-                                <Input className="form-control" type="text" placeholder="Sponser Name" {...register("Address", { required: true })} /><span style={{ color: "red" }}>{errors.Address && 'Mobile No. is required'} </span>
+                                <Input className="form-control" type="text" placeholder="Sponser Name" value={formData.mobileNumber} onChange={(e)=>setFormdata((prev)=>({...prev,mobileNumber:e.target.value}))} /><span style={{ color: "red" }}>{errors.Address && 'Mobile No. is required'} </span>
                             </FormGroup>
                         </Col>
                         <Col sm="6" md="6">
@@ -96,7 +148,7 @@ const EditMyProfile = () => {
                                 {/* {Address} */}
                                 Address
                             </Label>
-                                <Input className="form-control" type="Email" placeholder="Address" {...register("Address", { required: true })} /><span style={{ color: "red" }}>{errors.Address && 'Address is required'} </span>
+                                <Input className="form-control" value={address} readOnly type="Email" placeholder="Address" {...register("Address", { required: true })} /><span style={{ color: "red" }}>{errors.Address && 'Address is required'} </span>
                             </FormGroup>
                         </Col>
 

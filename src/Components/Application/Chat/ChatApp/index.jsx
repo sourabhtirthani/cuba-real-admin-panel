@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Breadcrumbs } from '../../../../AbstractElements';
 import { FaSortUp, FaSortDown } from 'react-icons/fa';
 import jsPDF from 'jspdf';
@@ -8,12 +8,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Fade } from 'react-reveal';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
+import { fetchUsersList } from '../../../../api/integrateConfig';
 
 const ChatAppContain = () => {
+  const [data , setData] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState('');
+
   const [searchFromUserName, setSearchFromUserName] = useState('');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+
+  const [startDate , setStartDate] = useState(new Date("2000-01-01"));
+  const [endDate , setEndDate] = useState(new Date("3000-01-01"));
+
+
+  // const [fromDate, setFromDate] = useState('');
+// const [toDate, setToDate] = useState('');
+
+
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -53,30 +64,30 @@ const ChatAppContain = () => {
   };
 
 
-  const [data, setData] = useState(
-    [
-      {
-        sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
-        ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
+  // const [data, setData] = useState(
+  //   [
+  //     {
+  //       sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
+  //       ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
 
-      },
-      {
-        sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
-        ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
+  //     },
+  //     {
+  //       sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
+  //       ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
 
-      },
-      {
-        sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
-        ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
+  //     },
+  //     {
+  //       sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
+  //       ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
 
-      },
-      {
-        sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
-        ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
+  //     },
+  //     {
+  //       sno: '1', name: 'Tiger Nixon', id: '	#101', SponserName: 'Admin', MobileNo: '+91XXXXX', EmailID: 'Admin@gmail.com', SponserID: '61', UserWalletAddress: '	$320,800', SponserWalletAddress: 'male', time: '21:37', wallet: '$2125', joindate: '2023/02/12', Date: '2023/04/12',
+  //       ReferralIncome: '$12', LevelIncome: '$22', PackageIncome: '$25', SlotIncome: '$20,', TotalIncome: '$5',
 
-      },
-    ]
-  )
+  //     },
+  //   ]
+  // )
   //  WalletAddress: 'New York',
 
   const [ascendingOrder, setAscendingOrder] = useState(true);
@@ -94,22 +105,22 @@ const ChatAppContain = () => {
 
   const statusOptions = ['Active', 'Inactive', 'Block'];
 
-  const filteredData = data.filter((row) => {
-    const rowDate = new Date(row.Date);
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
+  // const filteredData = data.filter((row) => {
+  //   const rowDate = new Date(row.Date);
+  //   const fromDateObj = fromDate ? new Date(fromDate) : null;
+  //   const toDateObj = toDate ? new Date(toDate) : null;
 
-    const statusFilter =
-      selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
+  //   const statusFilter =
+  //     selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
 
-    return (
-      statusFilter &&
-      rowDate >= (fromDateObj || rowDate) &&
-      rowDate <= (toDateObj || rowDate) &&
-      row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.name.toLowerCase().includes(searchFromUserName.toLowerCase())
-    );
-  });
+  //   return (
+  //     statusFilter &&
+  //     rowDate >= (fromDateObj || rowDate) &&
+  //     rowDate <= (toDateObj || rowDate) &&
+  //     row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  //     row.name.toLowerCase().includes(searchFromUserName.toLowerCase())
+  //   );
+  // });
 
   const tableRef = useRef(null);
 
@@ -164,9 +175,34 @@ const ChatAppContain = () => {
   const handleReset = () => {
     setSearchFromUserName('');
     setSelectedStatus('');
-    setFromDate('');
-    setToDate('');
+    setStartDate(new Date("2000-01-01"))
+    setEndDate(new Date("3000-01-01"))
   };
+
+
+  useEffect(()=>{
+    const fetchUserDetails = async()=>{
+      // console.log(endDate)
+      try{
+      let data1 = {
+        startDate : startDate,
+        endDate : endDate
+      }
+      const response = await fetchUsersList(data1);
+      setData(response.allUsers);
+    }catch(error){
+      console.log(`error in index file of the table `)
+    }
+
+    }
+    fetchUserDetails();
+  }, [startDate , endDate ])
+
+  let filteredData = data;
+  if (searchFromUserName !== '') {
+    filteredData = data.filter(user => user.name.toLowerCase().includes(searchFromUserName.toLowerCase()));
+  }
+  
 
   return (
     <Fragment>
@@ -218,9 +254,9 @@ const ChatAppContain = () => {
                   <h4 className='mb-0'>All User</h4>
                   <div className='date-inputs' style={{ display: 'flex', gap: '10px', alignItems: 'center', color: '#96979A' }}>
                     from:-
-                    <Input type='date' onChange={(e) => setFromDate(e.target.value)} />
+                    <Input type='date' onChange={(e) => setStartDate(e.target.value)} />
                     To:-
-                    <Input type='date' onChange={(e) => setToDate(e.target.value)} />
+                    <Input type='date' onChange={(e) => setEndDate(e.target.value)} />
                   </div>
                 </div>
                 <hr />
@@ -233,8 +269,8 @@ const ChatAppContain = () => {
                         <th> User ID</th>
                         <th>User Wallet Address</th>
                         <th>Sponser Name</th>
-                        <th>Sponser ID</th>
                         <th>Sponser Wallet Address</th>
+                        <th>Sponser ID</th>
                         <th>Mobile No.</th>
                         <th>Email ID</th>
                         <th >Referral Income</th>
@@ -249,24 +285,24 @@ const ChatAppContain = () => {
                     <tbody>
                       {filteredData.map((row, index) => (
                         <tr key={index}>
-                          <td>{row.sno}</td>
+                          <td>{index+1}</td>
                           <td>{row.name}</td>
                            <td>
                 {/* Use navigate for programmatic navigation */}
                 <div onClick={() => navigate(`/user/${row.id}/Dubai`)}>{row.id}</div>
               </td>
-                          <td>{row.UserWalletAddress}</td>
-                          <td>{row.SponserName}</td>
-                          <td>{row.SponserWalletAddress}</td>
-                          <td>{row.SponserID}</td>
-                          <td>{row.MobileNo}</td>
-                          <td>{row.EmailID}</td>
+                          <td>{row.userId}</td>
+                          <td>{row.address}</td>
+                          <td>{row.referBy}</td>
+                          <td>row.SponserID</td>
+                          <td>{row.mobileNumber}</td>
+                          <td>{row.email}</td>
                           <td>{row.ReferralIncome}</td>
                           <td>{row.LevelIncome}</td>
                           <td>{row.PackageIncome}</td>
                           <td>{row.SlotIncome}</td>
                           <td>{row.TotalIncome}</td>
-                          <td>{row.Date}</td>
+                          <td>{new Date(row.createdAt).toLocaleString()}</td>
                           <td style={{ display: 'flex', gap: '8px' }}>
                             <div
                               onClick={() => navigate('/Teamtable/Dubai')}

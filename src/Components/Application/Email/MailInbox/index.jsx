@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Container, Input, Row } from 'reactstrap';
 import { Breadcrumbs } from '../../../../AbstractElements';
 // import DataTable from 'react-data-table-component';
@@ -9,6 +9,8 @@ import { FaSortUp, FaSortDown } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Fade } from 'react-reveal';
+// import {useAccount} from 'wagmi'
+import { fetchPackage } from '../../../../api/integrateConfig';
 
 
 
@@ -17,6 +19,8 @@ const MailInboxContain = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  // const {address} = useAccount();
+  const address = "abc"
 
 
   const generatePDF = () => {
@@ -35,35 +39,60 @@ const MailInboxContain = () => {
   };
 
 
-  const [data, setData] = useState(
-    [
-      { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
-      { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
-      { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
-      { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
-      { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
+  // const [data, setData] = useState(
+  //   [
+  //     { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
+  //     { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
+  //     { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
+  //     { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
+  //     { UserID:'102303', WalletAddress:'Level', Date: '2005/11/04', Wallet: 'User', transaction: 'user', Amount: '$3740', Remark: '1 Level', package: '$64' },
 
-        ]
-  )
+  //       ]
+  // )
+
+  const [data , setData] = useState([]);
 
   const [ascendingOrder, setAscendingOrder] = useState(true);
 
+  const fetchAllPackages = async()=>{        //this function returns all the packages and is used inside the useEffect
+    // const {address,userId,startDate, endDate} = req.body;
+    try{
+      let data1 = {
+        address : address,
+        userId : localStorage.getItem("userID"), // only works if the user has first visited the edi profile section
+        startDate : fromDate,
+        endDate : toDate 
+        // ? toDate : new Date().toISOString().split('T')[0] 
+      }
+        const response  = await fetchPackage(data1);
+        console.log(`response recieved is : ${response.message}`)
+        console.log(`whole response is : ${response}`)
+        setData(response.result);        // the data is then mapped in the table
+    }catch(error){
+      console.log(`error in fetch all packages when hit from the front end : ${error.message}`)
+    }
+  }
+
+  useEffect(()=>{
+    fetchAllPackages();
+  }, [fromDate, toDate])
 
 
 
 
 
-  const filteredData = data.filter((row) => {
-    const rowDate = new Date(row.Date);
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
 
-    return (
-      rowDate >= (fromDateObj || rowDate) &&
-      rowDate <= (toDateObj || rowDate) &&
-      row.Date.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  // const filteredData = data.filter((row) => {
+  //   const rowDate = new Date(row.Date);
+  //   const fromDateObj = fromDate ? new Date(fromDate) : null;
+  //   const toDateObj = toDate ? new Date(toDate) : null;
+
+  //   return (
+  //     rowDate >= (fromDateObj || rowDate) &&
+  //     rowDate <= (toDateObj || rowDate) &&
+  //     row.Date.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  // });
 
 
   const handlePrint = () => {
@@ -206,13 +235,13 @@ const MailInboxContain = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredData.map((row, index) => (
+                          {data.map((row, index) => (
                             <tr key={index}>
-                              <td>{row.UserID}</td>
+                              <td>{row.UserId}</td>
                               <td>{row.package}</td>
-                              <td>{row.WalletAddress}</td>
-                              <td>{row.transaction}</td>
-                              <td>{row.Date}</td>
+                              <td>{row.address}</td>
+                              <td>{row.transactionHash}</td>
+                              <td>{new Date(row.time).toLocaleString()}</td>
                               {/* <td>{row.Wallet}</td>
                               <td>{row.Amount}</td>
                               <td>{row.Remark}</td> */}

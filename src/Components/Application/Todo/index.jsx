@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useRef, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { Plus } from 'react-feather';
 import { Card, CardBody, CardHeader, Col, Container, Input, Row } from 'reactstrap';
 import { Breadcrumbs, H5, Btn } from '../../../AbstractElements';
@@ -8,11 +8,15 @@ import 'jspdf-autotable';
 import { Fade } from 'react-reveal';
 import WidgetsWrapper from '../../Dashboard/Default/WidgetsWraper';
 import SlotActivation from '../../Dashboard/Default/DashBoardWidgets';
+// import { useAccount } from 'wagmi'
+import { fetchSlot } from '../../../api/integrateConfig';
 
 const TodoContain = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  // const { address} = useAccount();
+  const address = "abc"
 
 
   const generatePDF = () => {
@@ -31,37 +35,63 @@ const TodoContain = () => {
   };
 
 
-  const [data, setData] = useState(
-    [
-      { UserID: '#121', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
-      { UserID: '#122', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
-      { UserID: '#123', WalletAddress: 'Refrral', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
-      { UserID: '#124', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
-      { UserID: '#125', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
-      { UserID: '#126', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
+  // const [data, setData] = useState(
+  //   [
+  //     { UserID: '#121', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
+  //     { UserID: '#122', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
+  //     { UserID: '#123', WalletAddress: 'Refrral', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
+  //     { UserID: '#124', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
+  //     { UserID: '#125', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
+  //     { UserID: '#126', WalletAddress: 'level', Date: '2005/11/04', Slot: 'User', Slottype: '$64 (Renew)', transaction: 'Level' },
 
 
-    ]
-  )
+  //   ]
+  // )
+  const [data , setData] = useState([]);
 
   const [ascendingOrder, setAscendingOrder] = useState(true);
 
+  const fetchData = async ()=>{         // this function returns all slots and is used inside the useeffect
+    try{
+      // console.log(address + "and the user id is " + localStorage.getItem("userID"))
+      let data1 = {
+        address : address,
+        userId : localStorage.getItem("userID"),   //  in order to get user id from this, user must first go to edit profile section because this is where user ID is set to localsotrage otherwise it might throw error
+        startDate : fromDate,
+        endDate : toDate 
+        // ? toDate : new Date().toISOString().split('T')[0]
+      }
+      
+      const response = await fetchSlot(data1)
+      // console.log(`the kst is ${response.result[0].slot}`)
+      // for(let i = 0; i<response.result.length; i++){
+      //   console.log(` all the slots are : ${response.result[i].slot}`)
+      // }
+      setData(response.result);    // the array of rsult is then mapped in the table
+    }catch(error){
+      console.log(`error in fetching data from the backend : ${error.message}`)
+    }
+  }
+useEffect(()=>{        //new addition
+  fetchData();
+}, [fromDate , toDate])
 
 
 
 
 
-  const filteredData = data.filter((row) => {
-    const rowDate = new Date(row.Date);
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
 
-    return (
-      rowDate >= (fromDateObj || rowDate) &&
-      rowDate <= (toDateObj || rowDate) &&
-      row.Date.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  // const filteredData = data.filter((row) => {
+  //   const rowDate = new Date(row.Date);
+  //   const fromDateObj = fromDate ? new Date(fromDate) : null;
+  //   const toDateObj = toDate ? new Date(toDate) : null;
+
+  //   return (
+  //     rowDate >= (fromDateObj || rowDate) &&
+  //     rowDate <= (toDateObj || rowDate) &&
+  //     row.Date.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  // });
 
 
   const handlePrint = () => {
@@ -194,14 +224,14 @@ const TodoContain = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredData.map((row, index) => (
+                          {data.map((row, index) => (
                             <tr key={index}>
-                              <td>{row.UserID}</td>
-                              <td>{row.Slot}</td>
-                              <td>{row.WalletAddress}</td>
-                              <td>{row.Slottype}</td>
-                              <td>{row.transaction}</td>
-                              <td>{row.Date}</td>
+                              <td>{row.userId}</td>
+                              <td>{row.slot}</td>
+                              <td>row.WalletAddress</td>
+                              <td>row.Slottype</td>
+                              <td>{row.transactionHash}</td>
+                              <td>{row.createdAt}</td>
                               {/* <td>{row.Level}</td>
                               <td>{row.package}</td> */}
                             </tr>
