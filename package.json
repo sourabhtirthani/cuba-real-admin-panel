@@ -26,6 +26,7 @@
     "concurrently": "^8.0.1",
     "date-fns": "^2.29.3",
     "deni-react-treeview": "^1.1.11",
+    "dotenv": "^16.4.1",
     "easymde": "^2.18.0",
     "emoji-mart": "^5.5.2",
     "feather-icons": "^4.29.0",

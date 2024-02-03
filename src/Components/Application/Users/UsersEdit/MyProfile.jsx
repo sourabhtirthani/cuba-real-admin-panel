@@ -38,7 +38,7 @@ const MyProfileEdit = ({imagePath , nameOfUser}) => {
                       <H5 attrH5={{ className: 'mb-1' }}>{nameOfUser}</H5>
                     </Link>
                     <P> <span style={{color:'#BEBFC2'}} >
-                    {imagePath}
+                    DESIGNER
                       </span>
                       </P>
                   </div>
