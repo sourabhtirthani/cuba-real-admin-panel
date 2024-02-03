@@ -53,10 +53,13 @@ const TodoContain = () => {
 
   const fetchData = async ()=>{         // this function returns all slots and is used inside the useeffect
     try{
+      const storedUserId = localStorage.getItem("userID");
+      const storedAddress = localStorage.getItem("userAddress");
       // console.log(address + "and the user id is " + localStorage.getItem("userID"))
       let data1 = {
-        address : address,
-        userId : localStorage.getItem("userID"),   //  in order to get user id from this, user must first go to edit profile section because this is where user ID is set to localsotrage otherwise it might throw error
+        address : storedAddress ? storedAddress : "0x6C8120bBd8AB3676DDec47297074a953A1b3226e",
+        // userId : localStorage.getItem("userID"),   //  in order to get user id from this, user must first go to edit profile section because this is where user ID is set to localsotrage otherwise it might throw error
+        userId : storedUserId ? storedUserId : 505,
         startDate : fromDate,
         endDate : toDate 
         // ? toDate : new Date().toISOString().split('T')[0]

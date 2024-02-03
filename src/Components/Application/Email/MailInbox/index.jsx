@@ -57,9 +57,13 @@ const MailInboxContain = () => {
   const fetchAllPackages = async()=>{        //this function returns all the packages and is used inside the useEffect
     // const {address,userId,startDate, endDate} = req.body;
     try{
+      const storedUserId = localStorage.getItem("userID");
+      const storedAddress = localStorage.getItem("userAddress");
+
       let data1 = {
-        address : address,
-        userId : localStorage.getItem("userID"), // only works if the user has first visited the edi profile section
+        address : storedAddress ? storedAddress : "0x6C8120bBd8AB3676DDec47297074a953A1b3226e",
+        // userId : localStorage.getItem("userID"), // only works if the user has first visited the edi profile section
+        userId : storedUserId ? storedUserId : 505,
         startDate : fromDate,
         endDate : toDate 
         // ? toDate : new Date().toISOString().split('T')[0] 
@@ -237,7 +241,7 @@ const MailInboxContain = () => {
                         <tbody>
                           {data.map((row, index) => (
                             <tr key={index}>
-                              <td>{row.UserId}</td>
+                              <td>{row.userId}</td>
                               <td>{row.package}</td>
                               <td>{row.address}</td>
                               <td>{row.transactionHash}</td>

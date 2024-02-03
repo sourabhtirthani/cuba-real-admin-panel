@@ -8,7 +8,8 @@ import { getUserDetails, updateProfile } from "../../../../api/integrateConfig";
 // import  {useAccount } from 'wagmi';
 import Swal from 'sweetalert2';
 
-const EditMyProfile = () => {
+const EditMyProfile = ({setNameOfUser,setImagePath }) => {
+    
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [formData,setFormdata] = useState({
         name:"",
@@ -18,7 +19,7 @@ const EditMyProfile = () => {
     })
 
     // const { address} = useAccount();   
-    const {address} = "abcd"
+    const address = "0x6C8120bBd8AB3676DDec47297074a953A1b3226e"
 
 
     const onEditSubmit = async (e) => {
@@ -43,7 +44,7 @@ const EditMyProfile = () => {
                 // const accounts = await window.ethereum.request({ method : 'eth_requestAccounts'});
                 // const userAddress = accounts[0];
                 console.log(`user address is : ${address}`)
-                const data = {address : address}
+                const data = {address : "0x6C8120bBd8AB3676DDec47297074a953A1b3226e"}
                 try{
                 const response = await getUserDetails(data);
                 
@@ -51,6 +52,8 @@ const EditMyProfile = () => {
                         // console.log(`storage from the loacl storage is : ${localStorage.getItem("userID")}`)
                 
                 setFormdata({...response.userData})
+                setNameOfUser(response.userData.name);
+                setImagePath(response.userData.profilePicture);
                 console.log(response)
                 }catch(error){
                     // alert(`You have been logged out! Please log back in again`)
@@ -77,8 +80,8 @@ const EditMyProfile = () => {
                 <CardBody>
                     <Row>
                         <Col sm="6" md="6">
-                            <FormGroup> <Label className="form-label" style={{ color: '#BEBFC2' }}>{Username}</Label>
-                                <Input style={{ color: '#BEBFC2' }} className="form-control" type="text" placeholder="Username" value={formData.name} onChange={(e)=>setFormdata((prev)=>({...prev,name:e.target.value}))} {...register("Username", { required: true })} /><span style={{ color: "red" }}>{errors.Username && 'Username is required'} </span>
+                            <FormGroup> <Label className="form-label" style={{ color: '#BEBFC2' }}>Username</Label>
+                                <Input style={{ color: '#BEBFC2' }}  className="form-control" type="text" placeholder="Username" value={formData.name} onChange={(e)=>setFormdata((prev)=>({...prev,name:e.target.value}))} {...register("Username", { required: true })} /><span style={{ color: "red" }}>{errors.Username && 'Username is required'} </span>
                             </FormGroup>
                         </Col>
 
@@ -138,7 +141,7 @@ const EditMyProfile = () => {
                                 {/* {Address} */}
                                 Mobile No.
                             </Label>
-                                <Input className="form-control" type="text" placeholder="Sponser Name" value={formData.mobileNumber} onChange={(e)=>setFormdata((prev)=>({...prev,mobileNumber:e.target.value}))} /><span style={{ color: "red" }}>{errors.Address && 'Mobile No. is required'} </span>
+                                <Input className="form-control" type="text" placeholder="number" value={formData.mobileNumber} onChange={(e)=>setFormdata((prev)=>({...prev,mobileNumber:e.target.value}))} /><span style={{ color: "red" }}>{errors.Address && 'Mobile No. is required'} </span>
                             </FormGroup>
                         </Col>
                         <Col sm="6" md="6">
@@ -148,7 +151,7 @@ const EditMyProfile = () => {
                                 {/* {Address} */}
                                 Address
                             </Label>
-                                <Input className="form-control" value={address} readOnly type="Email" placeholder="Address" {...register("Address", { required: true })} /><span style={{ color: "red" }}>{errors.Address && 'Address is required'} </span>
+                                <Input className="form-control" value={address} readOnly type="text" placeholder="Address" {...register("Address", { required: true })} /><span style={{ color: "red" }}>{errors.Address && 'Address is required'} </span>
                             </FormGroup>
                         </Col>
 

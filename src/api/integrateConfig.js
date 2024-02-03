@@ -39,8 +39,9 @@ export const getUserDetails = async(data)=>{
 export const updateProfile = async(data)=>{
     return new Promise(async(resolve, reject)=>{
         try{
-            console.log(`the data in update profile in axios is ${data}`)
-            console.log(data)
+            // console.log(`the data in update profile in axios is ${data}`)
+            //updated code
+            // console.log(data)
             const formData = new FormData();
             formData.append("address" , data.address);
             formData.append("name",data.username);
