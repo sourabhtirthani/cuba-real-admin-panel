@@ -5,24 +5,36 @@ import 'react-toastify/dist/ReactToastify.css';
 import './MasterPackage.css';
 import { Btn, Breadcrumbs } from '../../../AbstractElements';
 import CustomizerContext from '../../../_helper/Customizer';
+import { sendAnnouncement } from '../../../api/integrateConfig';
 
 const BookmarksContain = () => {
   const { layoutURL } = useContext(CustomizerContext);
   const [announcement, setAnnouncement] = useState('');
 
-  const handleUpdateClick = () => {
+  const handleUpdateClick = async() => {
     // Perform the update logic here
     // For demonstration, let's just update the state value and show a snackbar
-    setAnnouncement('Updated Text');
+    // setAnnouncement('Updated Text');
 
     console.log('Updated Value:', announcement);
-
-
+    try{
+      let data = {
+        announcementFromAdmin : announcement
+      }
+      const token = localStorage.getItem("authToken");
+      const response = await sendAnnouncement(data, token);
+      console.log(response)
     // Show a success snackbar
     toast.success('Announcement updated successfully!', {
       position: toast.POSITION.TOP_RIGHT,
       autoClose: 3000, // Auto close after 3 seconds
     });
+  }catch(error){
+    toast.error('Error in sending announcements' ,{
+      position : toast.POSITION.TOP_RIGHT,
+      autoClose : 3000,
+    })
+  }
   };
 
   return (

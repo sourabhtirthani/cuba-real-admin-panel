@@ -19,14 +19,15 @@ const EditMyProfile = ({setNameOfUser,setImagePath }) => {
     })
 
     // const { address} = useAccount();   
-    const address = "0x6C8120bBd8AB3676DDec47297074a953A1b3226e"
+    const address = localStorage.getItem("address");
 
 
     const onEditSubmit = async (e) => {
         try{
         e.preventDefault();
         // alert(data)
-        const updateIt = await updateProfile(formData);
+        const token = localStorage.getItem("authToken")
+        const updateIt = await updateProfile(formData , token);
         Swal.fire({
             icon:"success",
             title:"SUCCESSFULL",
@@ -44,11 +45,12 @@ const EditMyProfile = ({setNameOfUser,setImagePath }) => {
                 // const accounts = await window.ethereum.request({ method : 'eth_requestAccounts'});
                 // const userAddress = accounts[0];
                 console.log(`user address is : ${address}`)
-                const data = {address : "0x6C8120bBd8AB3676DDec47297074a953A1b3226e"}
                 try{
-                const response = await getUserDetails(data);
+                const data = {address : localStorage.getItem("address")};
+                const token = localStorage.getItem("authToken");
+                const response = await getUserDetails(data, token);
                 
-                        localStorage.setItem("userID" , response.userData.userId);
+                        // localStorage.setItem("userID" , response.userData.userId);
                         // console.log(`storage from the loacl storage is : ${localStorage.getItem("userID")}`)
                 
                 setFormdata({...response.userData})
@@ -81,7 +83,7 @@ const EditMyProfile = ({setNameOfUser,setImagePath }) => {
                     <Row>
                         <Col sm="6" md="6">
                             <FormGroup> <Label className="form-label" style={{ color: '#BEBFC2' }}>Username</Label>
-                                <Input style={{ color: '#BEBFC2' }}  className="form-control" type="text" placeholder="Username" value={formData.name} onChange={(e)=>setFormdata((prev)=>({...prev,name:e.target.value}))} {...register("Username", { required: true })} /><span style={{ color: "red" }}>{errors.Username && 'Username is required'} </span>
+                                <Input style={{ color: '#BEBFC2' }}  className="form-control" type="text" placeholder="Username" value={formData.name} onChange={(e)=>setFormdata((prev)=>({...prev,name:e.target.value}))}  /><span style={{ color: "red" }}>{errors.Username && 'Username is required'} </span>
                             </FormGroup>
                         </Col>
 
@@ -141,7 +143,7 @@ const EditMyProfile = ({setNameOfUser,setImagePath }) => {
                                 {/* {Address} */}
                                 Mobile No.
                             </Label>
-                                <Input className="form-control" type="text" placeholder="number" value={formData.mobileNumber} onChange={(e)=>setFormdata((prev)=>({...prev,mobileNumber:e.target.value}))} /><span style={{ color: "red" }}>{errors.Address && 'Mobile No. is required'} </span>
+                                <Input className="form-control" type="text" placeholder="Mobile No." value={formData.mobileNumber} onChange={(e)=>setFormdata((prev)=>({...prev,mobileNumber:e.target.value}))} /><span style={{ color: "red" }}>{errors.Address && 'Mobile No. is required'} </span>
                             </FormGroup>
                         </Col>
                         <Col sm="6" md="6">

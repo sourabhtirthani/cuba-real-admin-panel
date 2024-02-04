@@ -9,7 +9,7 @@ import CustomizerContext from '../../../../_helper/Customizer';
 const MyProfileEdit = ({imagePath , nameOfUser}) => {
   // dotenv.config();
   // const imageURL = `${process.env.IMAGE_URL}/${imagePath}`;
-  const imageURL = `http://localhost:5000/images/${imagePath}`
+  const imageURL = `http://localhost:5000/images/${imagePath}`    // to be changed later
   // const image 
   console.log(`image url is ${imageURL}`)
   const { layoutURL } = useContext(CustomizerContext);

@@ -58,17 +58,18 @@ const MailInboxContain = () => {
     // const {address,userId,startDate, endDate} = req.body;
     try{
       const storedUserId = localStorage.getItem("userID");
-      const storedAddress = localStorage.getItem("userAddress");
+      const storedAddress = localStorage.getItem("address");
 
       let data1 = {
-        address : storedAddress ? storedAddress : "0x6C8120bBd8AB3676DDec47297074a953A1b3226e",
+        address : storedAddress,
         // userId : localStorage.getItem("userID"), // only works if the user has first visited the edi profile section
-        userId : storedUserId ? storedUserId : 505,
+        userId : storedUserId,
         startDate : fromDate,
         endDate : toDate 
         // ? toDate : new Date().toISOString().split('T')[0] 
       }
-        const response  = await fetchPackage(data1);
+      const token = localStorage.getItem("authToken")
+        const response  = await fetchPackage(data1, token);
         console.log(`response recieved is : ${response.message}`)
         console.log(`whole response is : ${response}`)
         setData(response.result);        // the data is then mapped in the table

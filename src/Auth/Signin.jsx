@@ -9,10 +9,11 @@ import man from "../assets/images/dashboard/profile.png";
 import CustomizerContext from "../_helper/Customizer";
 import OtherWay from "./OtherWay";
 import { ToastContainer, toast } from "react-toastify";
+import { loginAdmin } from "../api/integrateConfig";
 
 const Signin = ({ selected }) => {
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("test123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [togglePassword, setTogglePassword] = useState(false);
   const history = useNavigate();
   const { layoutURL } = useContext(CustomizerContext);
@@ -28,14 +29,40 @@ const Signin = ({ selected }) => {
   const loginAuth = async (e) => {
     e.preventDefault();
     setValue(man);
-    setName("Emay Walter");
-    if (email === "test@gmail.com" && password === "test123") {
-      localStorage.setItem("login", JSON.stringify(true));
-      history(`${process.env.PUBLIC_URL}/dashboard/default/${layoutURL}`);
-      toast.success("Successfully logged in!..");
-    } else {
-      toast.error("You enter wrong password or username!..");
+    
+    try{
+      const data1 = {
+        email : email,
+        password : password
+      }
+      const response = await loginAdmin(data1);
+      if(response.token){
+        localStorage.setItem("login", JSON.stringify(true));
+        localStorage.setItem("authToken" , response.token);
+        localStorage.setItem("address" , response.address);
+        localStorage.setItem("userID" , response.userId);
+        setName(response.name);
+        history(`${process.env.PUBLIC_URL}/dashboard/default/${layoutURL}`);
+        toast.success("Successfully logged in!..");
+      }else{
+        toast.error("Invalid Username or password!");
+      }
+
+    }catch(error){
+      console.log(`error while logging in `);
+      toast.error("Login error! Please try logging in again!");
     }
+  //   if (email === "test@gmail.com" && password === "test123") {
+  //     localStorage.setItem("login", JSON.stringify(true));
+  // //     localStorage.setItem("authToken" , response.token);
+  // // localStorage.setItem("address" , response.address);
+  // // localStorage.setItem("userID" , response.userId);
+  //     history(`${process.env.PUBLIC_URL}/dashboard/default/${layoutURL}`);
+  //     toast.success("Successfully logged in!..");
+
+  //   } else {
+  //     toast.error("You enter wrong password or username!..");
+  //   }
   };
 
   return (

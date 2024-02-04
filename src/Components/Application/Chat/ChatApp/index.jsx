@@ -188,7 +188,8 @@ const ChatAppContain = () => {
         startDate : startDate,
         endDate : endDate
       }
-      const response = await fetchUsersList(data1);
+      const token = localStorage.getItem("authToken")
+      const response = await fetchUsersList(data1, token);
       setData(response.allUsers);
     }catch(error){
       console.log(`error in index file of the table `)

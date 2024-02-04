@@ -7,6 +7,7 @@ import logoWhite from "../../../assets/images/logo/logo.png";
 import logoDark from "../../../assets/images/logo/logo_dark.png";
 import { useNavigate } from "react-router-dom";
 import { createAccount } from "../../../api/integrateConfig";
+import Swal from 'sweetalert2';
 
 
 const RegisterFrom = ({ logoClassMain }) => {
@@ -22,8 +23,8 @@ const RegisterFrom = ({ logoClassMain }) => {
     email: '',
     password: '',
     confirmPassword: '',
-    referralID: '',
-    referralName: '',
+    referById: '',
+    referByName: '',
     address: '',
     referBy: '',
   });
@@ -59,12 +60,20 @@ const handleSubmit = async (e)=>{
   // const response = await createAccounts
   try{
   const response = await createAccount(formData);
-  console.log(`the response recieved from response is : ${response.message}`);
+  // console.log(`the response recieved from response is : ${response.message}`);
   console.log(response)
-  localStorage.setItem("address" , formData.address)
-  localStorage.setItem("userID" , response.userId)
+  localStorage.setItem("login", JSON.stringify(true));
+  localStorage.setItem("authToken" , response.token);
+  localStorage.setItem("address" , response.address);
+  localStorage.setItem("userID" , response.userId);
+  Swal.fire({
+    icon:"success",
+    title:"SUCCESSFULL",
+    text:"Successfully created profile! ",
+  })
   }catch(error){
     console.log(error)
+    alert("Please login!")
   }
   // navigate(`${process.env.PUBLIC_URL}/dashboard/default/`);
 
@@ -201,7 +210,7 @@ const handleSubmit = async (e)=>{
                   <Input
                     className="form-control"
                     type="name"
-                    name="referralID"
+                    name="referById"
                     required
                     defaultValue={ref}
                     onChange={handleChange}
@@ -217,7 +226,7 @@ const handleSubmit = async (e)=>{
                   <Input
                     className="form-control"
                     type="text"
-                    name="referralName"
+                    name="referByName"
                     onChange={handleChange}
 
                   />

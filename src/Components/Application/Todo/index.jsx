@@ -64,8 +64,8 @@ const TodoContain = () => {
         endDate : toDate 
         // ? toDate : new Date().toISOString().split('T')[0]
       }
-      
-      const response = await fetchSlot(data1)
+      const token = localStorage.getItem("authToken")
+      const response = await fetchSlot(data1, token)
       // console.log(`the kst is ${response.result[0].slot}`)
       // for(let i = 0; i<response.result.length; i++){
       //   console.log(` all the slots are : ${response.result[i].slot}`)

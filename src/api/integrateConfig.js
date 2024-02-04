@@ -20,12 +20,13 @@ export const createAccount = async(data)=>{
 }
 
 
-export const getUserDetails = async(data)=>{
+export const getUserDetails = async(data, token)=>{
     return new Promise(async(resolve, reject)=>{
         try{
             const response = await axiosBase.get(`api/admin/details/${data.address}`, {
                 headers : {
                     'Content-Type': 'application/json',
+                    'Authorization': token
                 },
             });
             resolve(response.data);
@@ -36,7 +37,7 @@ export const getUserDetails = async(data)=>{
     })
 };
 
-export const updateProfile = async(data)=>{
+export const updateProfile = async(data, token)=>{
     return new Promise(async(resolve, reject)=>{
         try{
             // console.log(`the data in update profile in axios is ${data}`)
@@ -53,6 +54,7 @@ export const updateProfile = async(data)=>{
             const response = await axiosBase.patch('api/admin/profile/update' , data  , {
                 headers : {
                     'Content-Type': 'multipart/form-data',  //multipart
+                    'Authorization': token
                 },
             });
             console.log(`response recieved from the user is : ${response.data}`)
@@ -65,12 +67,13 @@ export const updateProfile = async(data)=>{
 }
 
 
-export const fetchSlot = async(data1)=>{
+export const fetchSlot = async(data1, token)=>{
     return new Promise(async(resolve, reject)=>{
         try{
             const response = await axiosBase.post('api/admin/fetchSlots' , data1 ,{
                 headers : {
                     'Content-Type': 'application/json',
+                    'Authorization': token
                 },
             } );
             resolve(response.data);
@@ -80,12 +83,13 @@ export const fetchSlot = async(data1)=>{
     })
 }
 
-export const fetchPackage = async(data)=>{
+export const fetchPackage = async(data, token)=>{
     return new Promise(async(resolve, reject)=>{
         try{
             const response = await axiosBase.post('api/admin/fetchPackages' , data , {
                 headers : {
-                    'Content-Type' : 'application/json'
+                    'Content-Type' : 'application/json',
+                    'Authorization': token
                 }
             });
             resolve(response.data)
@@ -96,12 +100,13 @@ export const fetchPackage = async(data)=>{
 }
 
 
-export const fetchUsersList = async(data1)=>{
+export const fetchUsersList = async(data1, token)=>{
     return new Promise(async(resolve , reject)=>{
         try{
             const response = await axiosBase.get(`api/admin/allusers?startDate=${data1.startDate}&endDate=${data1.endDate}` , {
                 headers : {
-                    'Content-Type' : 'application/json'
+                    'Content-Type' : 'application/json',
+                    'Authorization': token
                 }
             })
             resolve(response.data);
@@ -113,18 +118,56 @@ export const fetchUsersList = async(data1)=>{
 }
 
 
-export const fetchAllActivities = async()=>{
+export const fetchAllActivities = async(token)=>{
     return new Promise(async(resolve , reject)=>{
         try{
+            // const token = localStorage.getItem("authToken")
+            console.log(`the token is ${token}`)
             const response = await axiosBase.get(`api/admin/activities/all` , {
                 headers:{
-                    'Content-Type' : 'application/json'
+                    'Content-Type' : 'application/json',
+                    'Authorization': token
                 }
             });
             resolve(response.data);
 
         }catch(error){
             console.log(`error in fetch all activities in axios config : ${error.message}`)
+            reject(error);
+        }
+    })
+}
+
+
+export const loginAdmin = async(data1)=>{
+    return new Promise(async(resolve , reject)=>{
+        try{
+            const response = await axiosBase.post(`api/admin/profile/login` , data1 , {
+                headers : {
+                    'Content-Type' : 'application/json'
+                }
+            })
+            resolve(response.data);
+        }catch(error){
+            console.log(`error in login admin in axios : ${error.message}`)
+            reject(error);
+        }
+    })
+}
+
+export const sendAnnouncement = async(data1, token)=>{
+    return new Promise(async(resolve, reject)=>{
+        try{
+            // const token = localStorage.getItem("authToken")
+            const response = await axiosBase.post(`api/admin/announcements` , data1 , {
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization': token
+                }
+            })
+            resolve(response.data);
+        }catch(error){
+            console.log(`error in sending announcement in axios  : ${error.message}`);
             reject(error);
         }
     })

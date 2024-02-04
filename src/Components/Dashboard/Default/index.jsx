@@ -18,8 +18,9 @@ import { fetchAllActivities } from "../../../api/integrateConfig";
 
 
 
-const Dashboard = () => {
 
+const Dashboard = () => {
+  
   const [visibleItems, setVisibleItems] = useState(15); // Number of items to display initially
   const [platformData , setPlatformData] = useState([])
 
@@ -212,7 +213,8 @@ const Dashboard = () => {
   useEffect(()=>{
     const fetchListOfActivities = async()=>{
       try{
-        const activityList = await fetchAllActivities();
+        const token = localStorage.getItem("authToken")
+        const activityList = await fetchAllActivities(token);
         setPlatformData(activityList.allActivities);
         // console.log(activityList)
         // console.log(`activity list is : ${platformData}`)
@@ -512,7 +514,7 @@ const Dashboard = () => {
 
                       <div className="table-right-div">
                         <span>
-                          <CiShare1 size={'18px'} style={{ fontWeight: '800' }} />
+                          <CiShare1 size={'18px'} style={{ fontWeight: '800', cursor : 'pointer' }} onClick={()=>{window.location.href =`https://testnet.bscscan.com/tx/${data.transactionHash}`}}/>
                         </span>
                         <span>{formatTimeDifference(data.createdAt)}</span>
                       </div>
