@@ -298,11 +298,11 @@ const ChatAppContain = () => {
                           <td>row.SponserID</td>
                           <td>{row.mobileNumber}</td>
                           <td>{row.email}</td>
-                          <td>{row.referralIncome}</td>
+                          <td>{row.refferalIncome}</td>
                           <td>{row.levelIncome}</td>
-                          <td>{row.PackageIncome}</td>
+                          <td>{row.packageIncome}</td>
                           <td>{row.slotIncome}</td>
-                          <td>{row.TotalIncome}</td>
+                          <td>{row.slotIncome + row.packageIncome + row.levelIncome + row.refferalIncome}</td>
                           <td>{new Date(row.createdAt).toLocaleString()}</td>
                           <td style={{ display: 'flex', gap: '8px' }}>
                             <div
