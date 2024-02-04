@@ -11,7 +11,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import IntegrationNotistack from "./CopySuccsessful";
 import { CiShare1 } from "react-icons/ci";
 import { FaWallet } from "react-icons/fa6";
-import { fetchAllActivities } from "../../../api/integrateConfig";
+import { fetchAllActivities, fetchAllIncomeInfo } from "../../../api/integrateConfig";
 
 
 
@@ -23,6 +23,14 @@ const Dashboard = () => {
   
   const [visibleItems, setVisibleItems] = useState(15); // Number of items to display initially
   const [platformData , setPlatformData] = useState([])
+  const [totalTeam , setTotalTeam] = useState();
+  const [totalProfit , setTotalProfit] = useState();
+  const [refferalIncome , setRefferalIncome] = useState();
+  const [levelIncome , setLevelIncome] = useState();
+  const [slotIncome , setSlotIncome] = useState();
+  const [totalIncome , setTotalIncome] = useState();
+  const [totalUsers, setTotalUsers] = useState();
+  const [packageIncome , setPackageIncome] = useState();
 
   const [isSeeMoreVisible, setIsSeeMoreVisible] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(true);
@@ -223,7 +231,30 @@ const Dashboard = () => {
         console.log(`error in fetching list of activities in useEffect : ${error.message}`)
       }
     }
+
+const fetchAllIncome = async()=>{
+  const address = localStorage.getItem("address");
+  let data = {
+    address : address
+  }
+  try{
+  const response = await fetchAllIncomeInfo(data);
+  setTotalIncome(response.data.totalIncome);
+  // setTotalProfit(response.data.totalProfit)
+  setTotalTeam(response.data.totalTeam);
+  setRefferalIncome(response.data.refferalIncome);
+  setPackageIncome(response.data.packageIncome);
+  setSlotIncome(response.data.slotIncome);
+  setLevelIncome(response.data.levelIncome);
+  setTotalTeam(response.data.totalTeam);
+  setTotalUsers(response.data.totalMembers);
+  }catch(error){
+    console.log(`error in fetching all data : ${error.message}`);
+  }
+
+}
     fetchListOfActivities();
+    fetchAllIncome();
 
   }, [])
 
@@ -361,7 +392,7 @@ const Dashboard = () => {
 
                 <div className="first-container-box-left">
                   <b>Total Team</b>
-                  <h5>27</h5>
+                  <h5>{totalTeam}</h5>
                   <div className="icon-redius" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="zero-number"> </div>
                     <div className="reload-icon"> <img src="/images/activity_white.webp" alt="" /></div>
@@ -370,7 +401,7 @@ const Dashboard = () => {
               
                 <div className="first-container-box-left">
                   <b>Total Profit</b>
-                  <h5>27</h5>
+                  <h5>{totalIncome}</h5>
                   <div className="icon-redius" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="zero-number"> </div>
                     <div className="reload-icon"> <img src="/images/activity_white.webp" alt="" /></div>
@@ -395,7 +426,7 @@ const Dashboard = () => {
                   <div className="dashboard-container-box dashboard-boxes"  >
                     <div>
                       <div> <span style={{ fontSize: '34px', fontWeight: '500' }}>
-                        0
+                        {refferalIncome}
                       </span>
                       </div>
                       <div> <span>
@@ -407,7 +438,7 @@ const Dashboard = () => {
                   <div className="dashboard-container-box dashboard-boxes" >
                     <div>
                       <div> <span style={{ fontSize: '34px', fontWeight: '500' }}>
-                        0
+                        {levelIncome}
                       </span>
                       </div>
                       <div> <span>
@@ -420,7 +451,7 @@ const Dashboard = () => {
                   <div className="dashboard-container-box dashboard-boxes" >
                     <div>
                       <div> <span style={{ fontSize: '34px', fontWeight: '500' }}>
-                        0
+                        {packageIncome}
                       </span>
                       </div>
                       <div> <span>
@@ -432,7 +463,7 @@ const Dashboard = () => {
                   <div className="dashboard-container-box dashboard-boxes" >
                     <div>
                       <div> <span style={{ fontSize: '34px', fontWeight: '500' }}>
-                        0
+                        {slotIncome}
                       </span>
                       </div>
                       <div> <span>
@@ -445,7 +476,7 @@ const Dashboard = () => {
                   <div className="dashboard-container-box dashboard-boxes" >
                     <div>
                       <div> <span style={{ fontSize: '34px', fontWeight: '500' }}>
-                        0
+                        {totalIncome}
                       </span>
                       </div>
                       <div> <span>
@@ -514,7 +545,7 @@ const Dashboard = () => {
 
                       <div className="table-right-div">
                         <span>
-                          <CiShare1 size={'18px'} style={{ fontWeight: '800', cursor : 'pointer' }} onClick={()=>{window.location.href =`https://testnet.bscscan.com/tx/${data.transactionHash}`}}/>
+                          <CiShare1 size={'18px'} style={{ fontWeight: '800', cursor : 'pointer' }} onClick={() => window.open(`https://testnet.bscscan.com/tx/${data.transactionHash}`, '_blank')} />
                         </span>
                         <span>{formatTimeDifference(data.createdAt)}</span>
                       </div>
@@ -571,10 +602,10 @@ const Dashboard = () => {
 
                   <div>
                     <div style={{ color: 'white', fontSize: '23px', fontWeight: '700' }}>
-                      <span>1452 555</span>
+                      <span>{totalUsers}</span>
                     </div>
                     <div style={{ color: 'lightgreen', fontSize: '17px' }}>
-                      <span><NorthIcon sx={{ fontSize: '16px' }} />554</span>
+                      <span><NorthIcon sx={{ fontSize: '16px' }} />5</span>
                     </div>
                   </div>
                 </div>

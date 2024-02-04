@@ -57,6 +57,10 @@ const handleSubmit = async (e)=>{
   e.preventDefault();
   console.log(`formdata is :`)
   console.log(formData)
+  if(formData.password !== formData.confirmPassword){
+    alert("passwords do not match")
+    return ;
+  }
   // const response = await createAccounts
   try{
   const response = await createAccount(formData);
