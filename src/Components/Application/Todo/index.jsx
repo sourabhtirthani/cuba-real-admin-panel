@@ -218,7 +218,7 @@ useEffect(()=>{        //new addition
                           <tr>
                             <th>User ID</th>
                             <th> Slot</th>
-                            <th> WalletAddress</th>
+                            {/* <th> WalletAddress</th> */}
                             <th>Slot type</th>
                             <th>Transation Hash</th>
                             <th >Date & Time </th>
@@ -230,11 +230,11 @@ useEffect(()=>{        //new addition
                           {data.map((row, index) => (
                             <tr key={index}>
                               <td>{row.userId}</td>
-                              <td>{row.slot}</td>
-                              <td>row.WalletAddress</td>
-                              <td>row.Slottype</td>
+                              <td>${row.slot}</td>
+                              {/* <td>row.WalletAddress</td> */}
+                              <td>${row.slot}</td>
                               <td>{row.transactionHash}</td>
-                              <td>{row.createdAt}</td>
+                              <td>{new Date(row.createdAt).toLocaleString()}</td>
                               {/* <td>{row.Level}</td>
                               <td>{row.package}</td> */}
                             </tr>

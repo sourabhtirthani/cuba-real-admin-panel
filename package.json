@@ -100,6 +100,7 @@
     "redux": "^4.2.1",
     "redux-saga": "^1.2.3",
     "sass": "^1.62.0",
+    "serve": "^14.2.1",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.10",
     "sweetalert2": "^11.10.4",

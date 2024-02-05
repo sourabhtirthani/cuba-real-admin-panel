@@ -27,7 +27,7 @@ export default function BasicMenu() {
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
             >
-                {/* Dashboard */}
+                
             <FaRegUserCircle style={{ fontSize: 'large' }} />
             </Button>
             <Menu

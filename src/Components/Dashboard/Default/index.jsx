@@ -208,13 +208,10 @@ const Dashboard = () => {
   const showMoreItems = () => {
     setVisibleItems(visibleItems + 15); // Increase the number of visible items
   };
-
+  // 0x017F8a2da333a4c47E3f1A8db8d937AC155D3d97
   const boxdata3 = [
-    { name: 'x3/x4', link: ' 0x5ac...B97' },
-    { name: 'x3/x4', link: ' 0x5ac...B97' },
-    { name: 'x3/x4', link: ' 0x5ac...B97' },
-    { name: 'x3/x4', link: ' 0x5ac...B97' },
-    { name: 'x3/x4', link: ' 0x5ac...B97' }
+    { name: 'x3/x4', link: ' 0x017.....155D3d97' },
+    
   ]
 
 
@@ -604,46 +601,46 @@ const fetchAllIncome = async()=>{
                     <div style={{ color: 'white', fontSize: '23px', fontWeight: '700' }}>
                       <span>{totalUsers}</span>
                     </div>
-                    <div style={{ color: 'lightgreen', fontSize: '17px' }}>
+                    {/* <div style={{ color: 'lightgreen', fontSize: '17px' }}>
                       <span><NorthIcon sx={{ fontSize: '16px' }} />5</span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
-                <div className="platform-right-box-2">
-                  <div>
+                {/* <div className="platform-right-box-2"> */}
+                  {/* <div>
                     <span className="right-box-1-heading">
                       Members received
                     </span>
-                  </div>
+                  </div> */}
 
-                  <div style={{ borderBottom: '1px solid #363737', paddingBottom: '5px' }}>
+                  {/* <div style={{ borderBottom: '1px solid #363737', paddingBottom: '5px' }}>
                     <div style={{ color: 'white', fontSize: '23px', fontWeight: '700' }}>
                       <span> 1452 555</span>
                     </div>
                     <div style={{ color: 'lightgreen', fontSize: '17px' }}>
                       <span>
-                        {/* <NorthIcon sx={{ fontSize: '16px' }} /> */}
+                       
                         + 554</span>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div>
+                  {/* <div>
                     <div style={{ color: 'white', fontSize: '23px', fontWeight: '700' }}>
                       <span>1452 555</span>
                     </div>
                     <div style={{ color: 'lightgreen', fontSize: '17px' }}>
                       <span>
-                        {/* <NorthIcon sx={{ fontSize: '16px' }} /> */}
+                       
                         + 554</span>
                     </div>
-                  </div>
-                </div>
+                  </div> */}
+                {/* </div> */}
 
                 <div className="platform-right-box-3">
                   <div>
                     <span className="right-box-3-heading-main">
-                      Forsage BUSD Contracts
+                      Groways BUSD Contracts
                     </span>
                   </div>
                   {boxdata3.map((data1, index) => {
@@ -668,37 +665,37 @@ const fetchAllIncome = async()=>{
 
                   <div>
                     <span className="right-box-1-heading">
-                      Transactions made
+                      Total Income
                     </span>
                   </div>
 
                   <div style={{ borderBottom: '1px solid #363737', paddingBottom: '5px' }}>
                     <div style={{ color: 'white', fontSize: '23px', fontWeight: '700' }}>
-                      <span>1452 555</span>
+                      <span>{totalIncome}</span>
                     </div>
                     <div style={{ color: 'lightgreen', fontSize: '17px' }}>
                       <span>
                         {/* <NorthIcon sx={{ fontSize: '16px' }} /> */}
-                        + 554</span>
+                       </span>
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <span className="right-box-1-heading">
                       Turnover, BUSD
                     </span>
-                  </div>
+                  </div> */}
 
-                  <div style={{ borderBottom: '1px solid #363737', paddingBottom: '5px' }}>
+                  {/* <div style={{ borderBottom: '1px solid #363737', paddingBottom: '5px' }}>
                     <div style={{ color: 'white', fontSize: '23px', fontWeight: '700' }}>
                       <span>1452 555</span>
                     </div>
                     <div style={{ color: 'lightgreen', fontSize: '17px' }}>
                       <span>
-                        {/* <NorthIcon sx={{ fontSize: '16px' }} /> */}
+                        
                         + 554</span>
                     </div>
-                  </div>
+                  </div> */}
 
                 </div>
 

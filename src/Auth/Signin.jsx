@@ -23,7 +23,7 @@ const Signin = ({ selected }) => {
 
   useEffect(() => {
     localStorage.setItem("profileURL", man);
-    localStorage.setItem("Name", "Emay Walter");
+    
   }, [value, name]);
 
   const loginAuth = async (e) => {
@@ -41,6 +41,7 @@ const Signin = ({ selected }) => {
         localStorage.setItem("authToken" , response.token);
         localStorage.setItem("address" , response.address);
         localStorage.setItem("userID" , response.userId);
+        localStorage.setItem("Name", response.name);
         setName(response.name);
         history(`${process.env.PUBLIC_URL}/dashboard/default/${layoutURL}`);
         toast.success("Successfully logged in!..");

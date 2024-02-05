@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Image } from '../../AbstractElements';
 import CubaIcon from '../../assets/images/logo/logo.png';
 import CustomizerContext from '../../_helper/Customizer';
+import logo from './images/GrowWaysLogo.png'
+import { MarginRight } from '../../Constant';
 
 const SidebarLogo = () => {
   const { mixLayout, toggleSidebar, toggleIcon, layout, layoutURL } = useContext(CustomizerContext);
@@ -18,7 +20,10 @@ const SidebarLogo = () => {
     <div className='logo-wrapper'>
       {layout1 !== 'compact-wrapper dark-sidebar' && layout1 !== 'compact-wrapper color-sidebar' && mixLayout ? (
         <Link to={`${process.env.PUBLIC_URL}/dashboard/default/${layoutURL}`}>
-          <Image attrImage={{ className: 'img-fluid d-inline', src: `${CubaIcon}`, alt: '' }} />
+          <div style={{display : "flex" , alignItems : "center"}}>
+          <Image attrImage={{ className: 'img-fluid d-inline', src: logo, alt: '' , style : {height : "90px" , width : "80px"}}} />
+            <p style={{fontSize : "20px" , marginTop : "20px"}}>Groways</p>
+            </div>
         </Link>
       ) : (
         <Link to={`${process.env.PUBLIC_URL}/dashboard/default/${layoutURL}`}>

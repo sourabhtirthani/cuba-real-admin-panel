@@ -269,8 +269,8 @@ const ChatAppContain = () => {
                         <th> User Name</th>
                         <th> User ID</th>
                         <th>User Wallet Address</th>
-                        <th>Sponser Name</th>
-                        <th>Sponser Wallet Address</th>
+                        <th>Sponser  Wallet Address</th>
+                        <th>Sponser Name </th>
                         <th>Sponser ID</th>
                         <th>Mobile No.</th>
                         <th>Email ID</th>
@@ -280,7 +280,7 @@ const ChatAppContain = () => {
                         <th >Slot Income</th>
                         <th >Total Income</th>
                         <th >Date & Time</th>
-                        <th >Action</th>
+                        {/* <th >Action</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -288,14 +288,15 @@ const ChatAppContain = () => {
                         <tr key={index}>
                           <td>{index+1}</td>
                           <td>{row.name}</td>
-                           <td>
-                {/* Use navigate for programmatic navigation */}
+                           {/* <td>
+              
                 <div onClick={() => navigate(`/user/${row.id}/Dubai`)}>{row.id}</div>
-              </td>
+              </td> */}
                           <td>{row.userId}</td>
                           <td>{row.address}</td>
                           <td>{row.referBy}</td>
-                          <td>row.SponserID</td>
+                          <td>Spon sor name</td>
+                          <td>sponsor id</td>
                           <td>{row.mobileNumber}</td>
                           <td>{row.email}</td>
                           <td>{row.refferalIncome}</td>
@@ -304,7 +305,7 @@ const ChatAppContain = () => {
                           <td>{row.slotIncome}</td>
                           <td>{row.slotIncome + row.packageIncome + row.levelIncome + row.refferalIncome}</td>
                           <td>{new Date(row.createdAt).toLocaleString()}</td>
-                          <td style={{ display: 'flex', gap: '8px' }}>
+                          {/* <td style={{ display: 'flex', gap: '8px' }}>
                             <div
                               onClick={() => navigate('/Teamtable/Dubai')}
                             //  onClick={()=>{
@@ -323,7 +324,7 @@ const ChatAppContain = () => {
                             >
                               <GroupIcon titleAccess='AllTeam' className='team' />
                             </div>
-                          </td>
+                          </td> */}
                           {/* <td>
                             <Button color='primary' onClick={() => handleEditClick(row)}>
                               Edit
