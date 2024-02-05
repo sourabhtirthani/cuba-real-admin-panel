@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import PrintComponent from './Print';
 import { Breadcrumbs } from '../../../../AbstractElements';
 import jsPDF from 'jspdf';
@@ -7,16 +7,21 @@ import { Button, Container, Input, Modal } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { Fade } from 'react-reveal';
 import { FaLess } from 'react-icons/fa6';
+import { fetchAllIncomeTransaction } from '../../../../api/integrateConfig';
+// import { fetchAllIncomeInfo } from '../../../../api/integrateConfig';
 
 const InvoiceContain = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchFromUserName, setSearchFromUserName] = useState('');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [fromDate, setFromDate] = useState(new Date("2000-01-01"));
+  const [toDate, setToDate] = useState(new Date("3000-01-01"));
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editedRow, setEditedRow] = useState(null);
+
+  const [incomeType , setIncomeType] = useState('all');
+  const [data, setData] = useState([]);
 
   const [allIncome, setAllincome] = useState(false)
   const [refferal, setRefferal] = useState(false)
@@ -60,41 +65,41 @@ const InvoiceContain = () => {
   };
 
 
-  const [data, setData] = useState(
-    [
-      { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12' },
-    ]
-  )
+  // const [data, setData] = useState(
+  //   [
+  //     { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12' },
+  //   ]
+  // )
 
-  const [allincomedata, setAllincomedata] = useState(
-    [
-      { sno: '1', name: '	System Architect', id: '	#101', age: '61', selery: '	$320,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2023/04/12' },
+  // const [allincomedata, setAllincomedata] = useState(
+  //   [
+  //     { sno: '1', name: '	System Architect', id: '	#101', age: '61', selery: '	$320,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2023/04/12' },
 
-      { sno: '2', name: 'radhe radhe', id: '	#102', age: '64', selery: '	$327,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'London', wallet: '$2125', Date: '2023/04/20' },
+  //     { sno: '2', name: 'radhe radhe', id: '	#102', age: '64', selery: '	$327,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'London', wallet: '$2125', Date: '2023/04/20' },
 
-      { sno: '3', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2024/04/12' },
+  //     { sno: '3', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2024/04/12' },
 
-      { sno: '4', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2001/04/25' }
+  //     { sno: '4', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2001/04/25' }
 
-      , { sno: '5', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2021/04/25' },
+  //     , { sno: '5', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2021/04/25' },
 
-      { sno: '6', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2001/04/25' },
+  //     { sno: '6', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2001/04/25' },
 
-      { sno: '7', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2007/09/15' },
+  //     { sno: '7', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2007/09/15' },
 
-      { sno: '8', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2001/04/25' },
+  //     { sno: '8', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2001/04/25' },
 
-      { sno: '9', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2005/11/14' }
-    ]
-  )
+  //     { sno: '9', name: 'radhe radhe', id: '	#103', age: '64', selery: '	$234,800', gender: 'male', code: '456256', invitecode: '454212', status: '454242', time: '21:37', WalletAddress: 'New York', wallet: '$2125', Date: '2005/11/14' }
+  //   ]
+  // )
 
-  const [levelincomedata, setLevelincomedata] = useState(
-    [
-      { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12', Remark:'Level 1' },
-      { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12', Remark:'Level 1' },
-      { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12', Remark:'Level 1' },
-    ]
-  )
+  // const [levelincomedata, setLevelincomedata] = useState(
+  //   [
+  //     { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12', Remark:'Level 1' },
+  //     { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12', Remark:'Level 1' },
+  //     { sno: '1', ToWalletAddress: 'Tiger Nixon', id: '	#101', FromWalletAddress: '	$320,800', FromUserID: '456256', Incometype: '21:37', Amount: '$2125', Date: '2023/04/12', Remark:'Level 1' },
+  //   ]
+  // )
 
   const [ascendingOrder, setAscendingOrder] = useState(true);
 
@@ -111,56 +116,56 @@ const InvoiceContain = () => {
 
   const statusOptions = ['Renew'];
 
-  const filteredData = data.filter((row) => {
-    const rowDate = new Date(row.Date);
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
+  // const filteredData = data.filter((row) => {
+  //   const rowDate = new Date(row.Date);
+  //   const fromDateObj = fromDate ? new Date(fromDate) : null;
+  //   const toDateObj = toDate ? new Date(toDate) : null;
 
-    const statusFilter =
-      selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
+  //   const statusFilter =
+  //     selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
 
-    return (
-      statusFilter &&
-      rowDate >= (fromDateObj || rowDate) &&
-      rowDate <= (toDateObj || rowDate) &&
-      row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.ToWalletAddress.toLowerCase().includes(searchFromUserName.toLowerCase())
-    );
-  });
+  //   return (
+  //     statusFilter &&
+  //     rowDate >= (fromDateObj || rowDate) &&
+  //     rowDate <= (toDateObj || rowDate) &&
+  //     row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  //     row.ToWalletAddress.toLowerCase().includes(searchFromUserName.toLowerCase())
+  //   );
+  // });
 
-  const allIncomedata1 = allincomedata.filter((row) => {
-    const rowDate = new Date(row.Date);
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
+  // const allIncomedata1 = allincomedata.filter((row) => {
+  //   const rowDate = new Date(row.Date);
+  //   const fromDateObj = fromDate ? new Date(fromDate) : null;
+  //   const toDateObj = toDate ? new Date(toDate) : null;
 
-    const statusFilter =
-      selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
+  //   const statusFilter =
+  //     selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
 
-    return (
-      statusFilter &&
-      rowDate >= (fromDateObj || rowDate) &&
-      rowDate <= (toDateObj || rowDate) &&
-      row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.name.toLowerCase().includes(searchFromUserName.toLowerCase())
-    );
-  });
+  //   return (
+  //     statusFilter &&
+  //     rowDate >= (fromDateObj || rowDate) &&
+  //     rowDate <= (toDateObj || rowDate) &&
+  //     row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  //     row.name.toLowerCase().includes(searchFromUserName.toLowerCase())
+  //   );
+  // });
 
-  const levelincomedata1 = levelincomedata.filter((row) => {
-    const rowDate = new Date(row.Date);
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
+  // const levelincomedata1 = levelincomedata.filter((row) => {
+  //   const rowDate = new Date(row.Date);
+  //   const fromDateObj = fromDate ? new Date(fromDate) : null;
+  //   const toDateObj = toDate ? new Date(toDate) : null;
 
-    const statusFilter =
-      selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
+  //   const statusFilter =
+  //     selectedStatus === '' ? true : row.status.toLowerCase() === selectedStatus.toLowerCase();
 
-    return (
-      statusFilter &&
-      rowDate >= (fromDateObj || rowDate) &&
-      rowDate <= (toDateObj || rowDate) &&
-      row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.ToWalletAddress.toLowerCase().includes(searchFromUserName.toLowerCase())
-    );
-  });
+  //   return (
+  //     statusFilter &&
+  //     rowDate >= (fromDateObj || rowDate) &&
+  //     rowDate <= (toDateObj || rowDate) &&
+  //     row.Date.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  //     row.ToWalletAddress.toLowerCase().includes(searchFromUserName.toLowerCase())
+  //   );
+  // });
 
   const tableRef = useRef(null);
 
@@ -215,9 +220,77 @@ const InvoiceContain = () => {
   const handleReset = () => {
     setSearchFromUserName('');
     setSelectedStatus('');
-    setFromDate('');
-    setToDate('');
+    setFromDate(new Date("2000-01-01"));
+    setToDate(new Date("3000-01-01"));
+    setIncomeType('all')
   };
+
+  let filteredData = data;
+
+  if (incomeType == 'all') {
+    const frm = new Date(fromDate);
+    const too = new Date(toDate);
+    filteredData = data.filter(
+      transaction => 
+        new Date(transaction.createdAt) >= frm &&
+        new Date(transaction.createdAt) <= too
+    );
+  }
+  if (incomeType == 'Package upgrade income') {
+    const frm = new Date(fromDate)
+    const too = new Date(toDate)
+    filteredData = data.filter(
+      transaction => 
+        transaction.incomeType === 'Package upgrade income' &&
+        new Date(transaction.createdAt) >= frm &&
+        new Date(transaction.createdAt) <= too
+    );
+  }
+  if (incomeType == 'Slot income') {
+    const frm = new Date(fromDate)
+    const too = new Date(toDate)
+    filteredData = data.filter(
+      transaction => 
+        transaction.incomeType === 'Slot income' &&
+        new Date(transaction.createdAt) >= frm &&
+        new Date(transaction.createdAt) <= too
+    );
+  }
+  if (incomeType == 'Referral income') {
+    const frm = new Date(fromDate)
+    const too = new Date(toDate)
+    filteredData = data.filter(
+      transaction => 
+        transaction.incomeType === 'Referral income' &&
+        new Date(transaction.createdAt) >= frm &&
+        new Date(transaction.createdAt) <= too
+    );
+  }
+  if(incomeType == 'Level income'){
+    const frm = new Date(fromDate)
+    const too = new Date(toDate)
+    filteredData = data.filter(
+      transaction => 
+        transaction.incomeType === 'Level income' &&
+        new Date(transaction.createdAt) >= frm &&
+        new Date(transaction.createdAt) <= too
+    );
+  }
+
+  useEffect(()=>{
+    
+    const getAllIncomeDetails = async()=>{
+      try{
+      const token = localStorage.getItem("authToken");
+      const response = await fetchAllIncomeTransaction(token);
+      setData(response.allIncomes);
+      // console.log(data)
+      }catch(error){
+        console.log(`error in fetchin income info : ${error.message}`);
+      }
+    }
+    getAllIncomeDetails();
+  }, [fromDate , toDate])
 
   return (
     <Fragment>
@@ -275,47 +348,52 @@ const InvoiceContain = () => {
               margin: '20px 0px'
             }}>
               <button onClick={() => {
-                setAllincome(true);
-                setRefferal(false);
-                setLevelIncome(false);
-                setPackageincome(false);
-                setSlotincome(false)
+                // setAllincome(true);
+                // setRefferal(false);
+                // setLevelIncome(false);
+                // setPackageincome(false);
+                // setSlotincome(false)
+                setIncomeType('all');
               }} >
                 All Income
               </button>
               <button onClick={() => {
-                setAllincome(false);
-                setRefferal(true);
-                setLevelIncome(false);
-                setPackageincome(false);
-                setSlotincome(false)
+                // setAllincome(false);
+                // setRefferal(true);
+                // setLevelIncome(false);
+                // setPackageincome(false);
+                // setSlotincome(false)
+                setIncomeType('Referral income');
               }} >
                 Referral Income
               </button>
               <button onClick={() => {
-                setAllincome(false);
-                setRefferal(false);
-                setLevelIncome(true);
-                setPackageincome(false);
-                setSlotincome(false)
+                // setAllincome(false);
+                // setRefferal(false);
+                // setLevelIncome(true);
+                // setPackageincome(false);
+                // setSlotincome(false)
+                setIncomeType('Level income');
               }} >
                 Level Income
               </button>
               <button onClick={() => {
-                setAllincome(false);
-                setRefferal(false);
-                setLevelIncome(false);
-                setPackageincome(true);
-                setSlotincome(false)
+                // setAllincome(false);
+                // setRefferal(false);
+                // setLevelIncome(false);
+                // setPackageincome(true);
+                // setSlotincome(false)
+                setIncomeType('Package upgrade income');
               }} >
                 package upgrade Income
               </button>
               <button onClick={() => {
-                setAllincome(false);
-                setRefferal(false);
-                setLevelIncome(false);
-                setPackageincome(false);
-                setSlotincome(true)
+                // setAllincome(false);
+                // setRefferal(false);
+                // setLevelIncome(false);
+                // setPackageincome(false);
+                // setSlotincome(true)
+                setIncomeType('Slot income')
               }} >
                 slot Income
               </button>
@@ -357,41 +435,41 @@ const InvoiceContain = () => {
                         </th> */}
                         {/* <th>Action</th> */}
                         {
-                          console.log(levelIncome)
+                          // console.log(levelIncome)
 
                         }
                         {levelIncome && <th>Remark</th>}
                       </tr>
                     </thead>
-                    {!allIncome && !refferal && !levelIncome && !packageincome && !slotincome && (
+                    
                       <tbody>
                         {filteredData.map((row, index) => (
                           <tr key={index}>
-                            <td>{row.sno}</td>
-                            <td>{row.FromUserID}</td>
-                            <td>{row.ToWalletAddress}</td>
+                            <td>{index+1}</td>
+                            <td>{row.toUserId}</td>
+                            <td>{row.toAddress}</td>
                             {/* <td
                               style={{ cursor: 'pointer' }}
                               onClick={() => handleWalletClick(row.WalletAddress)}
                             >
                               {row.WalletAddress}
                             </td> */}
-                            <td>{row.id}</td>
-                            <td>{row.FromWalletAddress}</td>
-                            <td>{row.Incometype}</td>
-                            <td>{row.Amount}</td>
-                            <td>{row.Date}</td>
+                            <td>{row.fromUserId}</td>
+                            <td>{row.fromAddress}</td>
+                            <td>{row.incomeType}</td>
+                            <td>{row.amount}</td>
+                            <td>{new Date(row.createdAt).toLocaleString()}</td>
                             {/* <td>{row.age}</td>
                             <td>{row.gender}</td> */}
                           </tr>
                         ))}
                       </tbody>
-                    )}
+                    
 
                     {/* {
                       !jh && !lll &&!okj &&! ldf !jdsflkj && ()
                     } */}
-                    {allIncome && (
+                    {/* {allIncome && (
                       <tbody>
                         {allIncomedata1.map((row, index) => (
                           <tr key={index}>
@@ -470,7 +548,7 @@ const InvoiceContain = () => {
                           </tr>
                         ))}
                       </tbody>
-                    )}
+                    )} */}
                   </table>
                 </div>
                 {selectedWallet && (

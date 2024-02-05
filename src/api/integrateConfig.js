@@ -189,3 +189,22 @@ export const fetchAllIncomeInfo = async(data1)=>{
         }
     })
 }
+
+
+
+export const fetchAllIncomeTransaction = async(token)=>{
+    return new Promise(async(resolve , reject)=>{
+        try{
+            const response = await axiosBase.get(`/api/admin/incomes` , {
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization': token
+                }
+            })
+                resolve(response.data);
+        }catch(error){
+            console.log(`error in fetch all income transaction in axios : ${error.message}`);
+            reject(error)
+        }
+    })
+}

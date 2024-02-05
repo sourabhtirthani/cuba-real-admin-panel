@@ -409,7 +409,7 @@ const fetchAllIncome = async()=>{
                 </div>
                 <div className="first-container-box-left">
                   <b>Today Profit</b>
-                  <h5>27</h5>
+                  <h5>{totalIncome}</h5>
                   <div className="icon-redius" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="zero-number"> </div>
                     <div className="reload-icon"> <img src="/images/activity_white.webp" alt="" /></div>
